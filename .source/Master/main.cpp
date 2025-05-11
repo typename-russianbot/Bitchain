@@ -122,8 +122,10 @@ int flags(int argc, char **argv)
 int main(int argc, char *argv[])
 {
     Account account;
-    cout << account << endl;
 
+    account.add();
+
+    account.remove();
 
     return 0;
     // return flags(argc, *&argv);

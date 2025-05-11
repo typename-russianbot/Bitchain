@@ -29,7 +29,7 @@ private:
     Data data;   //* @var: data
 
 public:
-    //* @defgroup: Resources
+    // TODO - @defgroup: Resources
     //////////////////////////////////////////////////////
     //* @public: Key(const string, const Data)
     //* @def: constructor
@@ -43,13 +43,7 @@ public:
     ~Key(void);
     //////////////////////////////////////////////////////
 
-    //* @defgroup: Functions:
-    //////////////////////////////////////////////////////
-    //* @public:
-    //* @def:
-    //////////////////////////////////////////////////////
-
-    //* @defgroup: Mutators
+    // TODO - @defgroup: Mutators
     //////////////////////////////////////////////////////
     //* @public: setKeyname(const string)
     //* @def: sets keyname to string
@@ -75,7 +69,7 @@ public:
     void setEmail(const string);
     //////////////////////////////////////////////////////
 
-    //* @defgroup: Accessors
+    // TODO - @defgroup: Accessors
     //////////////////////////////////////////////////////
     //* @public: getKeyname(void)
     //* @def: returns keyname for this key
@@ -101,7 +95,7 @@ public:
     const string getEmail(void);
     //////////////////////////////////////////////////////
 
-    //* @defgroup: Overloads
+    // TODO - @defgroup: Overloads
     //////////////////////////////////////////////////////
     //* @public: operator=(const Key& key)
     //* @def: overloaded operator=
@@ -113,11 +107,5 @@ public:
     //* @def: overloaded ostream
 
     friend ostream &operator<<(ostream &, const Key &);
-    //////////////////////////////////////////////////////
-    //////////////////////////////////////////////////////
-    //* @public: operator>>
-    //* @def: overloaded istream
-
-    friend istream &operator>>(istream &, Key &);
     //////////////////////////////////////////////////////
 };

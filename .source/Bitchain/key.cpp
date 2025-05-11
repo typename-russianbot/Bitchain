@@ -1,6 +1,7 @@
 #include "../../includes/Bitchain/key.h"
 
-//~ @struct: Data
+//& @struct: Data
+// TODO - @defgroup: Overloads
 //////////////////////////////////////////////////////
 //* @public: Key(const string, const Data)
 ostream &operator<<(ostream &out, const Data &data)
@@ -25,7 +26,7 @@ Data &Data::operator=(const Data &data)
 //////////////////////////////////////////////////////
 
 //& @class: Key
-//* @defgroup: Resources
+// TODO - @defgroup: Resources
 //////////////////////////////////////////////////////
 //* @public: Key(const string, const Data)
 Key::Key(const string keyname, const Data keydata) : name(keyname)
@@ -42,7 +43,7 @@ Key::~Key(void)
 }
 //////////////////////////////////////////////////////
 
-//* @defgroup: Mutators
+// TODO - @defgroup: Mutators
 //////////////////////////////////////////////////////
 //* @public: setKeyname(const string)
 void Key::setKeyname(const string keyname)
@@ -76,7 +77,7 @@ void Key::setEmail(const string email)
 }
 //////////////////////////////////////////////////////
 
-//* @defgroup: Accessors
+// TODO - @defgroup: Accessors
 //////////////////////////////////////////////////////
 //* @public: getKeyname(void)
 const string Key::getKeyname(void) { return name; }
@@ -94,7 +95,7 @@ const string Key::getPassword(void) { return data.password; }
 const string Key::getEmail(void) { return data.email; }
 //////////////////////////////////////////////////////
 
-//* @defgroup: Overloads
+// TODO - @defgroup: Overloads
 //////////////////////////////////////////////////////
 //* @public: operator=(const Key&)
 Key &Key::operator=(const Key &other)
@@ -118,8 +119,4 @@ ostream &operator<<(ostream &out, const Key &key)
 
     return out;
 }
-//////////////////////////////////////////////////////
-//////////////////////////////////////////////////////
-//* @public: operator>>(istream&, Key&)
-
 //////////////////////////////////////////////////////
