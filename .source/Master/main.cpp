@@ -1,4 +1,4 @@
-#include "../../includes/Bitchain/bitchain.h"
+#include "../../includes/Account/account.h"
 
 //& @public: usage(void)
 //& @def: prints program usage to terminal
@@ -121,12 +121,9 @@ int flags(int argc, char **argv)
 //* @def: main program driver
 int main(int argc, char *argv[])
 {
-    Bitchain bitchain;
-    bitchain.add(Key{"github", {"mjh2001", "changeme", "axix01@yahoo.com"}});
-    bitchain.add(Key{"google", {"russianbot", "changeme", "axix01@yahoo.com"}});
+    Account account;
+    cout << account << endl;
 
-    cout << bitchain << endl;
-    cout << bitchain.getKeys() << endl;
 
     return 0;
     // return flags(argc, *&argv);
