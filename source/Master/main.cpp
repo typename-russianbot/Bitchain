@@ -122,9 +122,11 @@ int flags(int argc, char **argv)
 int main(int argc, char *argv[])
 {
     Bitchain bitchain;
+    bitchain.add(Key{"github", {"mjh2001", "changeme", "axix01@yahoo.com"}});
+    bitchain.add(Key{"google", {"russianbot", "changeme", "axix01@yahoo.com"}});
 
-    if (bitchain.isEmpty())
-        cout << "Bitchain Empty" << endl;
+    cout << bitchain << endl;
+    cout << bitchain.getKeys() << endl;
 
     return 0;
     // return flags(argc, *&argv);

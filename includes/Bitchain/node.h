@@ -50,7 +50,7 @@ public:
     //* @public: getKey(void)
     //* @def: returns key of this node
 
-    const Key &getKey(void);
+    Key &getKey(void);
     //////////////////////////////////////////////////////
     //////////////////////////////////////////////////////
     //* @public: getNext(void)

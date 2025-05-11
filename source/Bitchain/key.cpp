@@ -108,8 +108,7 @@ Key &Key::operator=(const Key &other)
 //* @public: operator<<(ostream&, const Key&)
 ostream &operator<<(ostream &out, const Key &key)
 {
-    out << "--------------------------------------------------------------" << endl
-        << "Keyname - " << key.name << endl
+    out << "Keyname - " << key.name << endl
         << "--------------------------------------------------------------" << endl
         << "Contents" << endl
         << "\tUsername:\t" << key.data.username << endl

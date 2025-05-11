@@ -6,7 +6,6 @@
 using namespace std;
 
 //* @def: Macros
-#define _version "Bitchain -- v0.0.1"
+#define _version "Bitchain -- v2.1.0"
 
 //^ @def: Functions
-
