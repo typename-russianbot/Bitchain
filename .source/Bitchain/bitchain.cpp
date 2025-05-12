@@ -1,6 +1,6 @@
 #include "../../includes/Bitchain/bitchain.h"
 
-//^ @defgroup: Helpers Functions
+//? @defgroup: Helpers
 ////////////////////////////////////////////////////////////////////////////////////////////
 //^ @protected: addKey(const Key&) -- done
 bool Bitchain::addKey(const Key &key)
@@ -115,7 +115,7 @@ bool Bitchain::searchKey(const string target)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO - @defgroup: Resources
+//? @defgroup: Resources
 ////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: Bitchain(void) -- done
 Bitchain::Bitchain(void) : head(nullptr), tail(nullptr) { return; }
@@ -183,15 +183,33 @@ bool Bitchain::isEmpty(void)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: save(void)
-bool Bitchain::save(void) { return false; }
-////////////////////////////////////////////////////////////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: wipe(void)
-bool Bitchain::wipe(void) { return false; }
+//* @public: save(ofstream&)
+bool Bitchain::save(ofstream &outputfile)
+{
+    if (!FileValidation(outputfile))
+    {
+        cerr << "Bitchain File failed to open" << endl;
+        return false;
+    }
+
+    Node *copy = head;
+
+    outputfile << copy->getKey().getKeyname() << "," << copy->getKey().getUsername() << "," << copy->getKey().getEmail() << "," << copy->getKey().getPassword() << endl;
+    copy = copy->getNext();
+
+    while (copy != head)
+    {
+        outputfile << copy->getKey().getKeyname() << "," << copy->getKey().getUsername() << "," << copy->getKey().getEmail() << "," << copy->getKey().getPassword() << endl;
+        copy = copy->getNext();
+    }
+
+    outputfile.close();
+
+    return true;
+}
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO - @defgroup: Overloads
+//? @defgroup: Overloads
 ////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: operator<<(ostream&, const Bitchain&) -- done
 ostream &operator<<(ostream &out, const Bitchain &bitchain)

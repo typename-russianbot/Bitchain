@@ -6,6 +6,8 @@
 #include <termios.h>
 #include <unistd.h>
 #include <fstream>
+#include <cstdio>
+#include <sstream>
 using namespace std;
 
 //* @def: Macros

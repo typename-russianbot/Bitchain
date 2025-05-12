@@ -1,6 +1,36 @@
 #include "../../includes/Account/account.h"
 
-// TODO - @defgroup: Resources
+//? @defgroup: Helpers
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//^ @protected: lookup(const string)
+//^ @def: searches for target username in accounts.txt & stores the associated data
+
+bool lookup(const string target)
+{
+    //* @note: validate inputfile
+    ifstream inputfile(".resources/Accounts/accounts.txt");
+    if (!FileValidation(inputfile))
+    {
+        cout << "Accounts file failed to load" << endl;
+        return false;
+    }
+
+    string line;
+    while (getline(inputfile, line))
+    {
+        stringstream currentline(line);
+        string keyname, username, email, password;
+
+        if (getline(currentline, keyname, ',') && getline(currentline, username, ',') && getline(currentline, email, ',') && getline(currentline, password))
+        {
+            Key filekey(keyname, {username, password, email});
+            
+        }
+    }
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+//? @defgroup: Resources
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: Account(const string, const string) -- done
 Account::Account(const string newUsername, const string newPasskey) : username(newUsername), passkey(newPasskey), keys(0), bitchain() { return; }
@@ -141,8 +171,15 @@ bool Account::save(void)
 
     //* @note: write Account contents to 'accounts.txt'
     outputfile << username << "," << passkey << "," << keys << endl;
-    outputfile.close();
+
+    //* @note: write Bitchain contents to 'username.txt'
+    ofstream bitchainfile(".resources/Bitchains/" + username + ".txt");
+    bitchain.save(bitchainfile);
+
     cout << "Bitchain account saved" << endl;
+
+    outputfile.close();
+    bitchainfile.close();
 
     return true;
 }
@@ -169,6 +206,10 @@ bool Account::wipe(void)
         return false;
     }
 
+    //* @note: delete bitchain savefile
+    string WipeBitchain = "rm -rf .resources/Bitchains/" + username + ".txt";
+    system(WipeBitchain.c_str());
+
     ofstream tempfile(".resources/Accounts/temp.txt");
 
     //* @note: copy all inputfile contents except target
@@ -188,11 +229,22 @@ bool Account::wipe(void)
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: load(const string)
-bool Account::load(void) { return false; }
+//* @public: load(void)
+bool Account::load(void)
+{
+    //* @note: grab target username to load
+    string target;
+    do
+    {
+        cout << "Target: ";
+        cin >> target;
+    } while (!InputValidation(target));
+
+    return false;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO - @defgroup: Mutators
+//? @defgroup: Mutators
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: setUsername(const string) -- done
 void Account::setUsername(const string nUsername)
@@ -218,7 +270,7 @@ void Account::setKeys(const int nKeys)
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO - @defgroup: Accessors
+//? @defgroup: Accessors
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: getUsername(void) -- done
 const string Account::getUsername(void) { return username; }
@@ -232,7 +284,7 @@ const string Account::getPasskey(void) { return passkey; }
 int Account::getKeys(void) { return keys; }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO - @defgroup: Overloads
+//? @defgroup: Overloads
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: operator<<(ostream&, const Account&) -- done
 ostream &operator<<(ostream &out, const Account &account)

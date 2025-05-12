@@ -99,6 +99,7 @@
     "initializer_list": "cpp",
     "limits": "cpp",
     "numbers": "cpp",
-    "typeinfo": "cpp"
+    "typeinfo": "cpp",
+    "fstream": "cpp"
   }
 }
