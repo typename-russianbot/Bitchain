@@ -1,21 +1,18 @@
 #pragma once
 
 //? @def: Dependencies
-#include <iostream>
-#include <stdlib.h>
-#include <termios.h>
-#include <unistd.h>
-#include <fstream>
-#include <cstdio>
-#include <sstream>
-#include <vector>
-#include <filesystem>
+#include <iostream>   //& @dir: iostream -- input/output control
+#include <termios.h>  //& @dir: termios -- alters terminal state
+#include <fstream>    //& @dir: fstream -- read/write to files
+#include <sstream>    //& @dir: sstream -- for line parsing
+#include <filesystem> //& @dir: filesystem -- file manipulation
+#include <unistd.h>   //& @dir: STDIN_FILENO -- shell i/o controls
 using namespace std;
 
-//* @def: Macros
-#define _version "Bitchain -- v2.1.8"
+//? @def: Macros
+#define _version "Bitchain -- v2.1.9" //& @var: _version
 
-//^ @def: Functions
+//? @def: Functions
 ////////////////////////////////////////////////////////////////////////////////////
 //^ @fn: HideTerminal(void)
 //^ @def: hides terminal input
@@ -54,14 +51,14 @@ bool FileValidation(const ifstream &); //^ @fn: FileValidation(const ifstream&)
 bool ConfirmOperation(void);
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
-//^ @fn: ClearCache(void)
+//^ @fn: ResetCache(void)
 //^ @def: wipes all data currently stored in 'cache.txt'
 
-bool ClearCache(void);
+bool ResetCache(void);
 ////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////
-//^ @fn: CleanStart(void)
+//^ @fn: Restart(void)
 //^ @def: wipes all currently stored data in program
 
-bool ResetBitchain(void);
+bool Restart(void);
 ////////////////////////////////////////////////////////////////////////////////////

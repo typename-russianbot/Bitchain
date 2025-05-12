@@ -1,7 +1,25 @@
 #include "../../includes/Account/account.h"
 
-//& @public: usage(void)
-//& @def: prints program usage to terminal
+//** @author:   mr-yellow   |   Matthew Hong                                                                     */
+//** @brief:    Digital Keychain program designed to store passwords, emails, usernames for websites             */
+//** @brief:    & applications securely while maintaining easy accessibility                                     */
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//^ @fn: testbench(void)
+int testbench(void)
+{
+    Account account("mjh2001", "changeme");
+
+    account.load();
+    account.print();
+    account.add();
+    account.save();
+
+    return 0;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//? @fn: usage(void)
 void usage(void)
 {
     cout << "Usage: bitchain [command] [target] ..." << endl
@@ -20,10 +38,10 @@ void usage(void)
 
     return;
 }
-
-//& @public: BITCHAIN(int, char**)
-//& @def: parses program flags
-bool BITCHAIN(int argc, char **argv)
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//? @fn: driver(int, char**)
+int driver(int argc, char **argv)
 {
 
     //? Program Components
@@ -61,12 +79,12 @@ bool BITCHAIN(int argc, char **argv)
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @note: Bitchain Reset
+        //* @note: Bitchain Reset -- done
         //* @def: resets all bitchain save files
         if (arg == "-R" || arg == "--reset")
         {
             //? @note: attempt to reset bitchain
-            if (ResetBitchain())
+            if (Restart())
             {
                 cout << "Bitchain Successfully Reset" << endl;
                 flag = true;
@@ -80,12 +98,12 @@ bool BITCHAIN(int argc, char **argv)
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @note: Bitchain Cache Cleaning
+        //* @note: Bitchain Cache Cleaning -- done
         //* @def: clears any contents in cache
         if (arg == "-C" || arg == "--clean")
         {
             //? @note: attempt to clear cache
-            if (ClearCache()) //* @note: cache cleared
+            if (ResetCache()) //* @note: cache cleared
             {
                 cout << "Cache Cleaned" << endl;
                 flag = true;
@@ -140,42 +158,25 @@ bool BITCHAIN(int argc, char **argv)
             //? @note: attempt to save
             if (account.save()) //* @note: saving successful
             {
-                cout << "<successs> -- saving completed" << endl;
+                cout << "Bitchain Account Created" << endl;
                 flag = true;
             }
             else //! @note: saving failure
             {
-                cerr << "<error> -- saving failed" << endl;
+                cerr << "<error>=saving_failure" << endl;
                 flag = false;
             }
 
             break;
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @note: Clear Account Cache -- done
-        //* @def: wipes the current contents of cache
-        else if (arg == "-cc" || arg == "--clear")
-        {
-            if (ClearCache()) //* @note: cache cleared successfully
-            {
-                cout << "User Cleaned Cache" << endl;
-                flag = true;
-            }
-            else
-            {
-                cerr << "<error>=cache_clearing" << endl;
-                flag = false;
-            }
-
-            break;
-        }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @note: Load Bitchain Account -- done
-        //* @def: prompts for user input then loads account data & store in cache.txt
+        //* @def:
         if (arg == "-l" || arg == "--load")
         {
             //? @note: target was passed as argument
-            string target;
+            string target; ///////////////////////////////////////////////////////////////////////////////////////////////////
+
             if (i + 1 < argc && argv[i + 1] != nullptr)
             {
                 target = argv[i + 1];
@@ -210,8 +211,7 @@ bool BITCHAIN(int argc, char **argv)
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @note: Delete Bitchain account -- done
-        //* @def: Delete [target] Bitchain Account
+        //* @def: Delete Bitchain Account
         else if (arg == "-d" || arg == "--delete")
         {
             //? @note: grab target argument
@@ -247,6 +247,7 @@ bool BITCHAIN(int argc, char **argv)
         if (arg == "-a" || arg == "--add")
         {
             //** code */
+            break;
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -254,6 +255,7 @@ bool BITCHAIN(int argc, char **argv)
         else if (arg == "-r" || arg == "--remove")
         {
             //** code */
+            break;
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -261,30 +263,20 @@ bool BITCHAIN(int argc, char **argv)
         else if (arg == "-p" || arg == "--print")
         {
             //** code */
+            break;
         }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     return flag;
 }
-
-//& @public: testbench(void)
-//& @def: testing bench for main driver of program
-int testbench(void)
-{
-    Account account("mjh2001", "changeme");
-
-    account.load();
-    account.print();
-    account.add();
-    account.save();
-
-    return 0;
-}
-
-//* @public: main(int, char*)
-//* @def: main program driver
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//* @main
 int main(int argc, char *argv[])
 {
-    cout << BITCHAIN(argc, *&argv);
+    return driver(argc, *&argv);
 }
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

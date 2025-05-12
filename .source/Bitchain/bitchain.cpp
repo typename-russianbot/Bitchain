@@ -193,7 +193,7 @@ bool Bitchain::save(ofstream &writefile)
     }
 
     if (head == nullptr)
-        return false;
+        return true;
 
     Node *copy = head;
     writefile << copy->getKey().getKeyname() << "," << copy->getKey().getUsername() << "," << copy->getKey().getEmail() << "," << copy->getKey().getPassword() << endl;
