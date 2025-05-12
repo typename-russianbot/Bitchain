@@ -4,7 +4,7 @@ CXX_FLAGS = -std=c++23 -Wall -Wextra -g
 SOURCE = $(shell find .source -name '*.cpp')
 objects = $(patsubst .source/%.cpp, .build/%.o, $(SOURCE))
 exe = run
-BUILD = build
+BUILD = .build
 
 all: $(exe)
 

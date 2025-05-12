@@ -1,0 +1,20 @@
+#!/bin/bash
+
+argc=$#
+
+for i in "$@"; do
+	if [ "$i" = "compile" ]; then
+
+		make -C program/ clean
+        make -C program/
+        clear
+        echo "Bitchain Compiled"
+
+    elif [ "$i" = "version"]; then
+        ./program/run --version 
+
+    elif [ "$i" = "help"]; then
+        ./program/run --help 
+    
+	fi
+done
