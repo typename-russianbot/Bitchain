@@ -46,14 +46,14 @@ int driver(int argc, char **argv)
 {
 
     //? Program Components
-    Account account;  //* @var: account
-    bool flag = true; //* @var: flag
+    Account account; //* @var: account
+    int flag = 0;    //* @var: flag
 
     //? Argument Handling
     if (argc == 1) //! @note: only one argument was passed
     {
         usage();
-        return 0;
+        return flag;
     }
     for (int i = 1; i < argc; i++) //* @note: multiple arguments were passed
     {
@@ -75,7 +75,6 @@ int driver(int argc, char **argv)
         else if (arg == "-h" || arg == "--help")
         {
             usage();
-            flag = true;
             break;
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -86,14 +85,11 @@ int driver(int argc, char **argv)
         {
             //? @note: attempt to reset bitchain
             if (Restart())
-            {
                 cout << "Bitchain Successfully Reset" << endl;
-                flag = true;
-            }
             else
             {
                 cerr << "<error>=reset_failure" << endl;
-                flag = false;
+                flag = 1;
             }
             break;
         }
@@ -105,14 +101,11 @@ int driver(int argc, char **argv)
         {
             //? @note: attempt to clear cache
             if (ResetCache()) //* @note: cache cleared
-            {
                 cout << "Cache Cleaned" << endl;
-                flag = true;
-            }
             else //! @note: cache cleaning failed
             {
                 cerr << "<error>=cache_cleaning>" << endl;
-                flag = false;
+                flag = 1;
             }
 
             break;
@@ -160,12 +153,11 @@ int driver(int argc, char **argv)
             if (account.save()) //* @note: saving successful
             {
                 cout << "Bitchain Account Created" << endl;
-                flag = true;
             }
             else //! @note: saving failure
             {
                 cerr << "<error>=saving_failure" << endl;
-                flag = false;
+                flag = 1;
             }
 
             break;
@@ -187,12 +179,11 @@ int driver(int argc, char **argv)
                 {
                     cout << "Bitchain Account Loaded" << endl;
                     account.cache();
-                    flag = true;
                 }
                 else //! @note: file not loaded
                 {
                     cerr << "<error> = loading failure" << endl;
-                    flag = false;
+                    flag = 1;
                 }
             }
             //? @note: attempt to load
@@ -200,12 +191,11 @@ int driver(int argc, char **argv)
             {
                 cout << "Bitchain Account Loaded" << endl;
                 account.cache();
-                flag = true;
             }
             else //! @note: file not loaded
             {
                 cerr << "<error> = loading failure" << endl;
-                flag = false;
+                flag = 1;
             }
 
             break;
@@ -224,20 +214,17 @@ int driver(int argc, char **argv)
 
                 //? @note: attempt deletion
                 if (account.wipe(target)) //* @note: deletion success
-                {
                     cout << "Bitchain Account Deleted" << endl;
-                    flag = true;
-                }
                 else //! @note: deletion failed
                 {
                     cerr << "<error> = deletion failure" << endl;
-                    flag = false;
+                    flag = 1;
                 }
             }
             else //! @note: no target given
             {
                 cerr << "<error> = no target given" << endl;
-                flag = false;
+                flag = 1;
             }
 
             break;

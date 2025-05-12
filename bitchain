@@ -2,6 +2,10 @@
 
 argc=$#
 
+if [ "$argc" = 0 ]; then
+    ./program/run --help
+fi
+
 for i in "$@"; do
 	if [ "$i" = "compile" ]; then
 
@@ -9,12 +13,9 @@ for i in "$@"; do
         make -C program/
         clear
         echo "Bitchain Compiled"
-
-    elif [ "$i" = "version"]; then
+    elif [ "$i" = "version" ]; then
         ./program/run --version 
-
-    elif [ "$i" = "help"]; then
+    elif [ "$i" = "help" ] || [ "$i" = "usage" ]; then
         ./program/run --help 
-    
 	fi
 done
