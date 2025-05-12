@@ -2,17 +2,17 @@
 
 // TODO - @defgroup: Resources
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: Account(const string, const string)
+//* @public: Account(const string, const string) -- done
 Account::Account(const string newUsername, const string newPasskey) : username(newUsername), passkey(newPasskey), keys(0), bitchain() { return; }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: ~Account(void)
+//* @public: ~Account(void) -- done
 Account::~Account(void) { return; }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // TODO - @defgroup: Functions
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: add(void)
+//* @public: add(void) -- done
 void Account::add(void)
 {
     //* @note: grab keyname, username, email, & password
@@ -44,19 +44,22 @@ void Account::add(void)
     //* @note: pass user input into key object
     Key key(keyname, {username, password, email});
 
-    if (bitchain.add(key))
+    //* @note: add key to bitchain
+    cout << "Add Key | ";
+    if (ConfirmOperation())
     {
+        bitchain.add(key);
         keys++;
-        cout << "'" << keyname << "' added" << endl;
+        cout << "Added '" << keyname << "'" << endl;
     }
     else
-        cout << "'" << keyname << "' failed to add" << endl;
+        cout << "Operation Terminated" << endl;
 
     return;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: remove(void)
+//* @public: remove(void) -- done
 void Account::remove(void)
 {
     //* @note: grab target keyname to remove
@@ -67,29 +70,27 @@ void Account::remove(void)
         cin >> target;
     } while (!InputValidation(target));
 
-    //* @note: begin target search
+    //* @note: search for target
     if (bitchain.search(target))
     {
-        cout << "'" << target << "' found" << endl
-             << endl;
-
+        cout << "Remove Key | ";
         if (ConfirmOperation())
         {
             bitchain.remove(target);
             keys--;
-            cout << "Removal Status: <success>" << endl;
+            cout << "Removed '" << target << "'" << endl;
         }
         else
-            cout << "Removal Status: <terminated>" << endl;
+            cout << "Operation Terminated" << endl;
     }
     else
-        cout << "'" << target << "' not found" << endl;
+        cout << "'" << target << "' not found" << endl; //! @note: miss
 
     return;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: search(void)
+//* @public: search(void) -- done
 void Account::search(void)
 {
     //* @note: grab search target
@@ -110,16 +111,15 @@ void Account::search(void)
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: print(void)
+//* @public: print(void) -- done
 void Account::print(void)
 {
     cout << bitchain;
     return;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: save(void)
+//* @public: save(void) -- done
 bool Account::save(void)
 {
     //* @note: grab & validate resource savefile
@@ -130,26 +130,48 @@ bool Account::save(void)
         return false;
     }
 
+    //* @note: grab user confirmation
+    cout << "Save Bitchain Account | ";
+    if (!ConfirmOperation())
+    {
+        cout << "Operation Terminated" << endl;
+        outputfile.close();
+        return false;
+    }
+
     //* @note: write Account contents to 'accounts.txt'
     outputfile << username << "," << passkey << "," << keys << endl;
     outputfile.close();
+    cout << "Bitchain account saved" << endl;
 
     return true;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: wipe(void)
+//* @public: wipe(void) -- done
 bool Account::wipe(void)
 {
     //* @note: grab & validate inputfile, create new tempfile
     ifstream inputfile(".resources/Accounts/accounts.txt");
-    ofstream tempfile(".resources/Accounts/temp.txt");
     if (!FileValidation(inputfile))
     {
         cerr << "File failed to open" << endl;
         return false;
     }
 
+    //* @note: grab user confirmation
+    cout << "Wipe Bitchain Account | ";
+    if (!ConfirmOperation())
+    {
+        cout << "Operation Terminated" << endl;
+        inputfile.close();
+
+        return false;
+    }
+
+    ofstream tempfile(".resources/Accounts/temp.txt");
+
+    //* @note: copy all inputfile contents except target
     string line;
     while (getline(inputfile, line))
     {
@@ -159,8 +181,8 @@ bool Account::wipe(void)
 
     inputfile.close();
     tempfile.close();
-
     rename(".resources/Accounts/temp.txt", ".resources/Accounts/accounts.txt");
+    cout << "Bitchain account wiped" << endl;
 
     return true;
 }
@@ -212,7 +234,7 @@ int Account::getKeys(void) { return keys; }
 
 // TODO - @defgroup: Overloads
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: operator<<(ostream&, const Account&)
+//* @public: operator<<(ostream&, const Account&) -- done
 ostream &operator<<(ostream &out, const Account &account)
 {
     out << "|--------------------------------------------------|" << endl

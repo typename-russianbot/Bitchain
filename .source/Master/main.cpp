@@ -119,8 +119,8 @@ int flags(int argc, char **argv)
 int testbench(void)
 {
     Account account;
-
-    account.wipe(); 
+    account.save();
+    account.wipe();
 
     return 0;
 }
