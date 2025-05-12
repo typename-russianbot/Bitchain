@@ -55,6 +55,7 @@ bool InputValidation(const string input)
 {
     for (char character : input)
     {
+        //! @note: Illegal Characters
         switch (character)
         {
         case ' ':
@@ -90,9 +91,13 @@ bool InputValidation(const string input)
         case '\'':
             return false;
 
+        case '!':
+            return false;
+
         default:
             break;
         }
+        //! @endnote
     }
 
     return true;

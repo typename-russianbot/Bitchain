@@ -5,28 +5,41 @@
 //^ @protected: lookup(const string)
 //^ @def: searches for target username in accounts.txt & stores the associated data
 
-bool lookup(const string target)
+bool Account::lookup(const string target)
 {
     //* @note: validate inputfile
     ifstream inputfile(".resources/Accounts/accounts.txt");
     if (!FileValidation(inputfile))
     {
-        cout << "Accounts file failed to load" << endl;
+        cout << "Account file failed to load" << endl;
         return false;
     }
 
+    //* @note: begin file parsing
     string line;
     while (getline(inputfile, line))
     {
         stringstream currentline(line);
-        string keyname, username, email, password;
+        string nUsername;
 
-        if (getline(currentline, keyname, ',') && getline(currentline, username, ',') && getline(currentline, email, ',') && getline(currentline, password))
+        if (getline(currentline, nUsername, ',') && nUsername == target)
         {
-            Key filekey(keyname, {username, password, email});
-            
+            //* @note: lookup hit, grab data
+            string nPasskey, nKeys;
+            getline(currentline, nPasskey, ',');
+            getline(currentline, nKeys);
+
+            //? @note: update account contents
+            username = nUsername;
+            passkey = nPasskey;
+            keys = atoi(nKeys.c_str());
+
+            return true;
         }
     }
+
+    //! @note: lookup miss
+    return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -45,30 +58,54 @@ Account::~Account(void) { return; }
 //* @public: add(void) -- done
 void Account::add(void)
 {
+    cin.ignore();
     //* @note: grab keyname, username, email, & password
     string keyname, username, email, password;
     do
     {
         cout << "Keyname: ";
-        cin >> keyname;
+        getline(cin, keyname);
+
+        if (keyname.empty())
+        {
+            keyname = "keyname";
+            break;
+        }
     } while (!InputValidation(keyname));
     do
     {
         cout << "Username: ";
-        cin >> username;
+        getline(cin, username);
+
+        if (username.empty())
+        {
+            username = "username";
+            break;
+        }
     } while (!InputValidation(username));
     do
     {
         cout << "Email: ";
-        cin >> email;
+        getline(cin, email);
+
+        if (email.empty())
+        {
+            email = "email";
+            break;
+        }
     } while (!InputValidation(email));
     do
     {
         cout << "Password: ";
         HideTerminal();
-
-        cin >> password;
+        getline(cin, password);
         ShowTerminal();
+
+        if (password.empty())
+        {
+            password = "password";
+            break;
+        }
     } while (!InputVerification(password));
 
     //* @note: pass user input into key object
@@ -87,17 +124,34 @@ void Account::add(void)
 
     return;
 }
+//* @public: add(const Key&) -- done
+void Account::add(const Key &key)
+{
+    bitchain.add(key);
+    keys++;
+    cout << "Added Key" << endl;
+    return;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: remove(void) -- done
 void Account::remove(void)
 {
+    cin.ignore();
+
     //* @note: grab target keyname to remove
     string target;
     do
     {
         cout << "Target: ";
-        cin >> target;
+        getline(cin, target);
+
+        //! @note: target not given
+        if (target.empty())
+        {
+            cout << "Target not specified" << endl;
+            return;
+        }
     } while (!InputValidation(target));
 
     //* @note: search for target
@@ -174,12 +228,15 @@ bool Account::save(void)
 
     //* @note: write Bitchain contents to 'username.txt'
     ofstream bitchainfile(".resources/Bitchains/" + username + ".txt");
-    bitchain.save(bitchainfile);
+    if (bitchain.save(bitchainfile))
+    {
+        cout << "bitchain saved" << endl;
+    }
 
     cout << "Bitchain account saved" << endl;
 
+    //? @note: close files to avoid leaks
     outputfile.close();
-    bitchainfile.close();
 
     return true;
 }
@@ -188,7 +245,8 @@ bool Account::save(void)
 //* @public: wipe(void) -- done
 bool Account::wipe(void)
 {
-    //* @note: grab & validate inputfile, create new tempfile
+
+    //? @note: grab & validate inputfile, create new tempfile
     ifstream inputfile(".resources/Accounts/accounts.txt");
     if (!FileValidation(inputfile))
     {
@@ -197,7 +255,7 @@ bool Account::wipe(void)
     }
 
     //* @note: grab user confirmation
-    cout << "Wipe Bitchain Account | ";
+    cout << "Delete Bitchain Account | ";
     if (!ConfirmOperation())
     {
         cout << "Operation Terminated" << endl;
@@ -220,12 +278,23 @@ bool Account::wipe(void)
             tempfile << line << endl;
     }
 
+    //? @note: close files
     inputfile.close();
     tempfile.close();
     rename(".resources/Accounts/temp.txt", ".resources/Accounts/accounts.txt");
-    cout << "Bitchain account wiped" << endl;
 
     return true;
+}
+//* @public: wipe(const string) -- done
+bool Account::wipe(const string target)
+{
+    if (lookup(target))
+    {
+        wipe();
+        return true;
+    }
+
+    return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -237,9 +306,35 @@ bool Account::load(void)
     do
     {
         cout << "Target: ";
-        cin >> target;
+        getline(cin, target);
+
+        //! @note: no target was given
+        if (target.empty())
+        {
+            cout << "Target not specified" << endl;
+            return false;
+        }
     } while (!InputValidation(target));
 
+    //! @note: target miss
+    if (!lookup(target))
+    {
+        cout << "Account '" << target << "' not found" << endl;
+        return false;
+    }
+
+    //* @note: target hit
+    cout << "Account '" << target << "' found" << endl;
+    ifstream bitchainfile(".resources/Bitchains/" + username + ".txt");
+
+    if (bitchain.load(bitchainfile))
+    {
+        cout << "loaded bitchain" << endl;
+        return true;
+    }
+
+    //! @note: unaccounted loading error
+    cout << "loading failed bitchain" << endl;
     return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

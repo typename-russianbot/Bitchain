@@ -19,9 +19,9 @@ void usage(void)
     return;
 }
 
-//& @public: flags(int, char**)
+//& @public: BITCHAIN(int, char**)
 //& @def: parses program flags
-int flags(int argc, char **argv)
+int BITCHAIN(int argc, char **argv)
 {
     if (argc == 1)
     {
@@ -29,86 +29,129 @@ int flags(int argc, char **argv)
         return 0;
     }
 
-    int flag = 1;
+    //* Program Components
+    Account account;
+    bool flag = true; //* @var: flags | return value
+
     for (int i = 1; i < argc; i++)
     {
         string arg = argv[i]; //* grab argument
 
-        ///////////////////////////////////////////////////////
-        //* @def: Bitchain Version
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        //* @note: Bitchain Version
+        //* @def: prints current program version
         if (arg == "-v" || arg == "--version")
         {
             cout << _version << endl;
         }
-        ///////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////
-        //* @def: Bitchain Usage
-        if (arg == "-h" || arg == "--help")
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        //* @note: Bitchain Usage
+        //* @def: prints how to navigate program
+        else if (arg == "-h" || arg == "--help")
         {
             usage();
             flag = 0;
         }
-        ///////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////
-        //* @def: Create Bitchain Account
-        if (arg == "-c" || arg == "--create")
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        //* @note: Create Bitchain Account
+        //* @def: prompts for username & passkey, then initializes/saves account
+        else if (arg == "-c" || arg == "--create")
         {
-            string username;
-            if (argv[i + 1])
-                username = argv[i + 1];
-            else
+            //* @note: grab user data
+            string username, passkey;
+            do
             {
-                cerr << "<error> - no username specified" << endl;
-                return 1;
-            }
-            flag = 0;
+                cout << "Username: ";
+                getline(cin, username);
+
+                if (username.empty())
+                {
+                    username = "username";
+                    break;
+                }
+
+            } while (!InputValidation(username));
+            do
+            {
+                cout << "Passkey: ";
+                HideTerminal();
+                getline(cin, passkey);
+                ShowTerminal();
+
+                if (passkey.empty())
+                {
+                    passkey = "passkey";
+                    break;
+                }
+            } while (!InputVerification(passkey));
+
+            //? @note: pass user data to account
+            account.setUsername(username);
+            account.setPasskey(passkey);
+            account.setKeys(0);
+
+            //* @note: saving successful
+            if (account.save())
+                cout << "<successs> -- saving completed" << endl;
+            //! @note: saving failure
+            else
+                cerr << "<error> -- saving failed" << endl;
+
+            break;
         }
-        ///////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////
-        //* @def: Load [target] Bitchain Account
-        if (arg == "-l" || arg == "--load")
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        //* @note: Load Bitchain Account
+        //* @def: prompts for user input then loads account data & store in cache.txt
+        else if (arg == "-l" || arg == "--load")
         {
-            cout << "in load account" << endl;
+            //** code */
+            //? prompt for username
+            //? search accounts.txt
+            //* if hit, place account in the cache
+            //! if miss, report to console
         }
-        ///////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        //* @note: Delete Bitchain account
         //* @def: Delete [target] Bitchain Account
-        if (arg == "-d" || arg == "--delete")
+        else if (arg == "-d" || arg == "--delete")
         {
-            cout << "in delete account" << endl;
+            //? @note: grab target argument
+            string target;
+            if (i + 1 < argc && argv[i + 1] != nullptr)
+            {
+                //? @note: pass argv into target & wipe it
+                target = argv[i + 1];
+                account.wipe(target);
+            }
+            else
+                cerr << "<error> = no target given" << endl;
         }
-        ///////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         //* @def: Add Key to Cached Account
         if (arg == "-a" || arg == "--add")
         {
-            string username;
-            if (argv[i + 1])
-            {
-                username = argv[i + 1];
-                cout << username << endl;
-            }
-            else
-            {
-                cerr << "<error> - no username specified" << endl;
-                return 1;
-            }
-
-            flag = 0;
+            //** code */
         }
-        ///////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         //* @def: Removes [target] Key from Cached Account
-        if (arg == "-r" || arg == "--remove")
-            cout << "in remove key" << endl;
-
-        ///////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////
+        else if (arg == "-r" || arg == "--remove")
+        {
+            //** code */
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         //* @def: Prints [target] Key from Cached Account
-        if (arg == "-p" || arg == "--print")
-            cout << "in print" << endl;
-
-        ///////////////////////////////////////////////////////
+        else if (arg == "-p" || arg == "--print")
+        {
+            //** code */
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
     return flag;
@@ -118,8 +161,12 @@ int flags(int argc, char **argv)
 //& @def: testing bench for main driver of program
 int testbench(void)
 {
-    Account account;
-    account.wipe();
+    Account account("mjh2001", "changeme");
+
+    account.load();
+    account.print();
+    account.add();
+    account.save();
 
     return 0;
 }
@@ -128,5 +175,5 @@ int testbench(void)
 //* @def: main program driver
 int main(int argc, char *argv[])
 {
-    return testbench();
+    return BITCHAIN(argc, *&argv);
 }

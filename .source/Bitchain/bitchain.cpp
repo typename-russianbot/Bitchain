@@ -184,27 +184,61 @@ bool Bitchain::isEmpty(void)
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: save(ofstream&)
-bool Bitchain::save(ofstream &outputfile)
+bool Bitchain::save(ofstream &writefile)
 {
-    if (!FileValidation(outputfile))
+    //* @note: file validation
+    if (!FileValidation(writefile))
     {
         cerr << "Bitchain File failed to open" << endl;
         return false;
     }
 
+    if (head == nullptr)
+        return false;
+
     Node *copy = head;
+    writefile << copy->getKey().getKeyname() << "," << copy->getKey().getUsername() << "," << copy->getKey().getEmail() << "," << copy->getKey().getPassword() << endl;
 
-    outputfile << copy->getKey().getKeyname() << "," << copy->getKey().getUsername() << "," << copy->getKey().getEmail() << "," << copy->getKey().getPassword() << endl;
     copy = copy->getNext();
-
     while (copy != head)
     {
-        outputfile << copy->getKey().getKeyname() << "," << copy->getKey().getUsername() << "," << copy->getKey().getEmail() << "," << copy->getKey().getPassword() << endl;
+        writefile << copy->getKey().getKeyname() << "," << copy->getKey().getUsername() << "," << copy->getKey().getEmail() << "," << copy->getKey().getPassword() << endl;
         copy = copy->getNext();
     }
 
-    outputfile.close();
+    return true;
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+//* @public: load(ifstream&)
+bool Bitchain::load(ifstream &readfile)
+{
+    //* @note: file validation
+    if (!FileValidation(readfile))
+    {
+        cerr << "Bitchain File failed to open" << endl;
+        return false;
+    }
 
+    string line;
+    while (getline(readfile, line))
+    {
+        stringstream currentline(line);
+        string field;
+
+        string nKeyname, nUsername, nEmail, nPassword;
+
+        if (getline(currentline, nKeyname, ',') && getline(currentline, nUsername, ',') && getline(currentline, nEmail, ',') && getline(currentline, nPassword))
+        {
+            Key key(nKeyname, {nUsername, nPassword, nEmail});
+            if (addKey(key))
+                cout << "Key added" << endl;
+            else
+                cout << "Key failed to add" << endl;
+        }
+    }
+
+    readfile.close();
     return true;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
