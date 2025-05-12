@@ -98,3 +98,41 @@ bool InputValidation(const string input)
     return true;
 }
 //////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//^ @fn: FileValidation(const ofstream&)
+bool FileValidation(const ofstream &output)
+{
+    if (output)
+        return true;
+
+    return false;
+}
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//^ @fn: FileValidation(const ifstream&)
+bool FileValidation(const ifstream &input)
+{
+    if (input)
+        return true;
+
+    return false;
+}
+//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+//^ @fn: ConfirmOperation(void)
+bool ConfirmOperation(void)
+{
+    //* @note: grab user confirmation
+    char input;
+    do
+    {
+        cout << "Confirm? [y/n]: ";
+        cin >> input;
+    } while (input != 'y' && input != 'Y' && input != 'n' && input != 'N');
+
+    if (input == 'y' || input == 'Y')
+        return true;
+    else
+        return false;
+}
+//////////////////////////////////////////////////////////////////

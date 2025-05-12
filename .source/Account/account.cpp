@@ -67,14 +67,23 @@ void Account::remove(void)
         cin >> target;
     } while (!InputValidation(target));
 
-    //* @note:
-    if (bitchain.remove(target))
+    //* @note: begin target search
+    if (bitchain.search(target))
     {
-        keys--;
-        cout << "'" << target << "' removed" << endl;
+        cout << "'" << target << "' found" << endl
+             << endl;
+
+        if (ConfirmOperation())
+        {
+            bitchain.remove(target);
+            keys--;
+            cout << "Removal Status: <success>" << endl;
+        }
+        else
+            cout << "Removal Status: <terminated>" << endl;
     }
     else
-        cout << "'" << target << "' removal failure" << endl;
+        cout << "'" << target << "' not found" << endl;
 
     return;
 }
@@ -101,12 +110,60 @@ void Account::search(void)
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//* @public: print(void)
+void Account::print(void)
+{
+    cout << bitchain;
+    return;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: save(void)
-bool Account::save(void) { return false; }
+bool Account::save(void)
+{
+    //* @note: grab & validate resource savefile
+    ofstream outputfile(".resources/Accounts/accounts.txt", ios::app);
+    if (!FileValidation(outputfile))
+    {
+        cerr << "File failed to open" << endl;
+        return false;
+    }
+
+    //* @note: write Account contents to 'accounts.txt'
+    outputfile << username << "," << passkey << "," << keys << endl;
+    outputfile.close();
+
+    return true;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: wipe(void)
-bool Account::wipe(void) { return false; }
+bool Account::wipe(void)
+{
+    //* @note: grab & validate inputfile, create new tempfile
+    ifstream inputfile(".resources/Accounts/accounts.txt");
+    ofstream tempfile(".resources/Accounts/temp.txt");
+    if (!FileValidation(inputfile))
+    {
+        cerr << "File failed to open" << endl;
+        return false;
+    }
+
+    string line;
+    while (getline(inputfile, line))
+    {
+        if (line.find(username) == string::npos)
+            tempfile << line << endl;
+    }
+
+    inputfile.close();
+    tempfile.close();
+
+    rename(".resources/Accounts/temp.txt", ".resources/Accounts/accounts.txt");
+
+    return true;
+}
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //* @public: load(const string)

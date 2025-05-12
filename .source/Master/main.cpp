@@ -40,7 +40,6 @@ int flags(int argc, char **argv)
         {
             cout << _version << endl;
         }
-
         ///////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////
         //* @def: Bitchain Usage
@@ -49,7 +48,6 @@ int flags(int argc, char **argv)
             usage();
             flag = 0;
         }
-
         ///////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////
         //* @def: Create Bitchain Account
@@ -98,7 +96,6 @@ int flags(int argc, char **argv)
 
             flag = 0;
         }
-
         ///////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////
         //* @def: Removes [target] Key from Cached Account
@@ -117,15 +114,20 @@ int flags(int argc, char **argv)
     return flag;
 }
 
+//& @public: testbench(void)
+//& @def: testing bench for main driver of program
+int testbench(void)
+{
+    Account account;
+
+    account.wipe(); 
+
+    return 0;
+}
+
 //* @public: main(int, char*)
 //* @def: main program driver
 int main(int argc, char *argv[])
 {
-    Account account;
-
-    account.add();
-
-    account.remove(); 
-
-    return 0;
+    return testbench();
 }
