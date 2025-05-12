@@ -131,7 +131,6 @@ Bitchain::~Bitchain(void)
 
     do
     {
-        cout << "destroying " << tmp->getKey().getKeyname() << endl;
         nxt = tmp->getNext();
         delete tmp;
         tmp = nxt;

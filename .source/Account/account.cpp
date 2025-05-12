@@ -187,9 +187,9 @@ void Account::search(void)
 
     //* @note: search bitchain for user' target
     if (bitchain.search(target))
-        cout << "'" << target << "' found" << endl; //* target found
+        cout << "Target Found: " << target << endl; //* target found
     else
-        cout << "'" << target << "' not found" << endl; //! target not found
+        cout << "<error> = '" << target << "' doesn't exist" << endl; //! target not found
 
     return;
 }
@@ -246,7 +246,7 @@ bool Account::cache(void)
     ofstream cachefile(".resources/Accounts/cache.txt");
     if (!FileValidation(cachefile))
     {
-        cerr << "<error> = file failed to open" << endl;
+        cerr << "<error>==file_opening" << endl;
         return false;
     }
 
@@ -273,9 +273,8 @@ bool Account::wipe(void)
     cout << "Delete Bitchain Account | ";
     if (!ConfirmOperation())
     {
-        cout << "Operation Terminated" << endl;
+        cerr << "<Operation Terminated>" << endl;
         inputfile.close();
-
         return false;
     }
 
@@ -316,8 +315,6 @@ bool Account::wipe(const string target)
 //* @public: load(void) -- done
 bool Account::load(void)
 {
-    cin.ignore();
-
     //? @note: prompt for target username
     string target;
     do
@@ -334,23 +331,17 @@ bool Account::load(void)
     } while (!InputValidation(target));
 
     //! @note: target miss
-    if (!lookup(target))
+    if (lookup(target))
     {
-        cout << "Account '" << target << "' not found" << endl;
-        return false;
+        //* @note: target hit
+        cout << "Target Found: " << target << endl;
+        ifstream bitchainfile(".resources/Bitchains/" + username + ".txt");
+
+        if (bitchain.load(bitchainfile))
+            return true;
     }
 
-    //* @note: target hit
-    cout << "Account '" << target << "' found" << endl;
-    ifstream bitchainfile(".resources/Bitchains/" + username + ".txt");
-
-    if (bitchain.load(bitchainfile))
-    {
-        cout << "loaded bitchain" << endl; //* @note: target found
-        return true;
-    }
-
-    cerr << "<error> = loading failed bitchain" << endl; //! @note: loading failure
+    cerr << "<error>==miss" << endl; //! @note: loading failure
     return false;
 }
 //* @public: load(const string) -- done
