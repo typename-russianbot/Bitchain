@@ -210,7 +210,7 @@ bool Account::save(void)
     ofstream outputfile(".resources/Accounts/accounts.txt", ios::app);
     if (!FileValidation(outputfile))
     {
-        cerr << "File failed to open" << endl;
+        cerr << "<error> = file failed to open" << endl;
         return false;
     }
 
@@ -230,14 +230,29 @@ bool Account::save(void)
     ofstream bitchainfile(".resources/Bitchains/" + username + ".txt");
     if (bitchain.save(bitchainfile))
     {
-        cout << "bitchain saved" << endl;
+        // ? @note : close files to avoid leaks
+        outputfile.close();
+        return true;
     }
 
-    cout << "Bitchain account saved" << endl;
+    return false;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//* @public:cache(void)
+bool Account::cache(void)
+{
+    //? @note: grab & validate cache
+    ofstream cachefile(".resources/Accounts/cache.txt");
+    if (!FileValidation(cachefile))
+    {
+        cerr << "<error> = file failed to open" << endl;
+        return false;
+    }
 
-    //? @note: close files to avoid leaks
-    outputfile.close();
-
+    //? @note: write Account data to cache
+    cachefile << username << "," << passkey << "," << keys << endl;
+    cachefile.close();
     return true;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -298,10 +313,12 @@ bool Account::wipe(const string target)
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: load(void)
+//* @public: load(void) -- done
 bool Account::load(void)
 {
-    //* @note: grab target username to load
+    cin.ignore();
+
+    //? @note: prompt for target username
     string target;
     do
     {
@@ -329,12 +346,24 @@ bool Account::load(void)
 
     if (bitchain.load(bitchainfile))
     {
-        cout << "loaded bitchain" << endl;
+        cout << "loaded bitchain" << endl; //* @note: target found
         return true;
     }
 
-    //! @note: unaccounted loading error
-    cout << "loading failed bitchain" << endl;
+    cerr << "<error> = loading failed bitchain" << endl; //! @note: loading failure
+    return false;
+}
+//* @public: load(const string) -- done
+bool Account::load(const string target)
+{
+    //* @note: target hit
+    if (lookup(target))
+    {
+        ifstream bitchainfile(".resources/Bitchains/" + target + ".txt");
+        if (bitchain.load(bitchainfile))
+            return true;
+    }
+
     return false;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

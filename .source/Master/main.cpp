@@ -59,7 +59,7 @@ int BITCHAIN(int argc, char **argv)
         //* @def: prompts for username & passkey, then initializes/saves account
         else if (arg == "-c" || arg == "--create")
         {
-            //* @note: grab user data
+            //? @note: grab user data
             string username, passkey;
             do
             {
@@ -92,12 +92,10 @@ int BITCHAIN(int argc, char **argv)
             account.setPasskey(passkey);
             account.setKeys(0);
 
-            //* @note: saving successful
             if (account.save())
-                cout << "<successs> -- saving completed" << endl;
-            //! @note: saving failure
+                cout << "<successs> -- saving completed" << endl; //* @note: saving successful
             else
-                cerr << "<error> -- saving failed" << endl;
+                cerr << "<error> -- saving failed" << endl; //! @note: saving failure
 
             break;
         }
@@ -107,11 +105,25 @@ int BITCHAIN(int argc, char **argv)
         //* @def: prompts for user input then loads account data & store in cache.txt
         else if (arg == "-l" || arg == "--load")
         {
-            //** code */
-            //? prompt for username
-            //? search accounts.txt
-            //* if hit, place account in the cache
-            //! if miss, report to console
+            //? prompt for target username
+            string target;
+            if (i + 1 < argc && argv[i + 1] != nullptr)
+            {
+                target = argv[i + 1];
+
+                //* if hit, place account in the cache
+                if (account.load(target))
+                {
+                    cout << "Bitchain Account Loaded" << endl;
+                    account.cache();
+                }
+                else
+                    cerr << "<error> = loading failure" << endl; //! @note: file not loaded
+            }
+            else
+            {
+                account.load();
+            }
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -123,12 +135,17 @@ int BITCHAIN(int argc, char **argv)
             string target;
             if (i + 1 < argc && argv[i + 1] != nullptr)
             {
-                //? @note: pass argv into target & wipe it
+                //? @note: pass argv into target, then delete if target is found
                 target = argv[i + 1];
-                account.wipe(target);
+                if (account.wipe(target))
+                    cout << "Bitchain Account Deleted" << endl; //* @note: success
+                else
+                    cerr << "<error> = deletion failure" << endl; //! @note: failed
+
+                break;
             }
-            else
-                cerr << "<error> = no target given" << endl;
+
+            cerr << "<error> = no target given" << endl; //! @note: no target given
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
