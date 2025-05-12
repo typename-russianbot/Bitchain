@@ -125,8 +125,7 @@ int main(int argc, char *argv[])
 
     account.add();
 
-    account.remove();
+    account.remove(); 
 
     return 0;
-    // return flags(argc, *&argv);
 }

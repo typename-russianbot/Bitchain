@@ -15,25 +15,40 @@ Account::~Account(void) { return; }
 //* @public: add(void)
 void Account::add(void)
 {
+    //* @note: grab keyname, username, email, & password
     string keyname, username, email, password;
+    do
+    {
+        cout << "Keyname: ";
+        cin >> keyname;
+    } while (!InputValidation(keyname));
+    do
+    {
+        cout << "Username: ";
+        cin >> username;
+    } while (!InputValidation(username));
+    do
+    {
+        cout << "Email: ";
+        cin >> email;
+    } while (!InputValidation(email));
+    do
+    {
+        cout << "Password: ";
+        HideTerminal();
 
-    cout << "Keyname: ";
-    cin >> keyname;
+        cin >> password;
+        ShowTerminal();
+    } while (!InputVerification(password));
 
-    cout << "Username: ";
-    cin >> username;
-
-    cout << "Email:";
-    cin >> email;
-
-    cout << "Password: ";
-    //? hide terminal input
-    cin >> password;
-    //* show terminal input
-
+    //* @note: pass user input into key object
     Key key(keyname, {username, password, email});
+
     if (bitchain.add(key))
+    {
+        keys++;
         cout << "'" << keyname << "' added" << endl;
+    }
     else
         cout << "'" << keyname << "' failed to add" << endl;
 
@@ -44,18 +59,23 @@ void Account::add(void)
 //* @public: remove(void)
 void Account::remove(void)
 {
+    //* @note: grab target keyname to remove
     string target;
-
-    cout << "Target: ";
-    cin >> target;
-
-    if (bitchain.search(target))
+    do
     {
-        cout << target << " key removed" << endl;
-        bitchain.remove(target);
+        cout << "Target: ";
+        cin >> target;
+    } while (!InputValidation(target));
+
+    //* @note:
+    if (bitchain.remove(target))
+    {
+        keys--;
+        cout << "'" << target << "' removed" << endl;
     }
     else
-        cout << "'" << target << "' not found" << endl;
+        cout << "'" << target << "' removal failure" << endl;
+
     return;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -63,10 +83,21 @@ void Account::remove(void)
 //* @public: search(void)
 void Account::search(void)
 {
+    //* @note: grab search target
     string target;
+    do
+    {
+        cout << "Target: ";
+        cin >> target;
+    } while (!InputValidation(target));
 
-    cout << "Target: ";
-    cin >> target;
+    //* @note: search bitchain for user' target
+    if (bitchain.search(target))
+        cout << "'" << target << "' found" << endl; //* target found
+    else
+        cout << "'" << target << "' not found" << endl; //! target not found
+
+    return;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
