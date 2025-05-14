@@ -1,6 +1,6 @@
 #include "../../includes/Bitchain/node.h"
 
-// TODO - @defgroup: Resources
+//? @defgroup: Resources
 //////////////////////////////////////////////////////
 //* @public: Node(const Key&)
 Node::Node(const Key &nKey) : key(nKey), next(nullptr), prev(nullptr) { return; }
@@ -10,7 +10,7 @@ Node::Node(const Key &nKey) : key(nKey), next(nullptr), prev(nullptr) { return; 
 Node::~Node(void) { return; }
 //////////////////////////////////////////////////////
 
-// TODO - @defgroup: Mutators
+//? @defgroup: Mutators
 //////////////////////////////////////////////////////
 //* @public: setKey(const Key&)
 void Node::setKey(const Key &key)
@@ -36,7 +36,7 @@ void Node::setPrev(Node *node)
 }
 //////////////////////////////////////////////////////
 
-// TODO - @defgroup: Accessors
+//? @defgroup: Accessors
 //////////////////////////////////////////////////////
 //* @public: getKey(void)
 Key &Node::getKey(void) { return key; }
