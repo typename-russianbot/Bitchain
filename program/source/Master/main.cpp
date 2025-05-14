@@ -23,19 +23,32 @@ int testbench(void)
 //? @fn: usage(void)
 void usage(void)
 {
-    cout << "Usage: bitchain [command] [target] ..." << endl
+    //? @note: usage will change eventually once we move to the parent folder
+
+    cout << "==============================================================================================" << endl
          << endl
-         << "Commands: --example [argv]" << endl
-         << "\t-v, --version\t\t\t\t\tPrint current program version" << endl
-         << "\t-h, --help\t\t\t\t\tPrint program usage" << endl
-         << "\t-R, --reset\t\t\t\t\tresets program save files" << endl
-         << "\t-C, --clean\t\t\t\t\tclears program cache" << endl
-         << "\t-c, --create\t\t\t\t\tCreates a new bitchain account" << endl
-         << "\t-l, --load [target]\t\t\t\tLoads target bitchain account" << endl
-         << "\t-d, --delete [target]\t\t\t\tDeletes target bitchain account" << endl
-         << "\t-a, --add\t\t\t\t\tAdds new key to loaded account" << endl
-         << "\t-r, --remove [target]\t\t\t\tRemoves target key from loaded account" << endl
-         << "\t-p, --print [target]\t\t\t\tPrints target key to console from loaded account" << endl;
+         << "Bitchain Usage:" << endl
+         << "\tbitchain --command 'arg'" << endl
+         << endl
+         << "Bitchain Commands:" << endl
+         << "\t1. General:" << endl
+         << "\t\t--version\t\t\tDisplay Program Version" << endl
+         << "\t\t--help\t\t\t\tDisplay Program Usage" << endl
+         << "\t\t--reset\t\t\t\tReset Program" << endl
+         << "\t\t--clean\t\t\t\tClear Program Cache" << endl
+         << endl
+         << "\t2. Bitchain Accounts:" << endl
+         << "\t\t--list\t\t\t\tList Bitchain Accounts" << endl
+         << "\t\t--create\t\t\tCreate Bitchain Account" << endl
+         << "\t\t--load\t\t\t\tLoad Bitchain Account" << endl
+         << "\t\t--delete\t\t\tDelete Bitchain Account" << endl
+         << endl
+         << "\t3. Bitchain Keys:" << endl
+         << "\t\t--display\t\t\t\tDisplay Bitchain Key" << endl
+         << "\t\t--add\t\t\t\tAdd Bitchain Key" << endl
+         << "\t\t--remove\t\t\tDelete Bitchain Key" << endl
+         << endl
+         << "==============================================================================================" << endl;
 
     return;
 }
@@ -44,7 +57,6 @@ void usage(void)
 //? @fn: driver(int, char**)
 int driver(int argc, char **argv)
 {
-
     //? Program Components
     Account account; //* @var: account
     int flag = 0;    //* @var: flag
@@ -57,12 +69,10 @@ int driver(int argc, char **argv)
     }
     for (int i = 1; i < argc; i++) //* @note: multiple arguments were passed
     {
-        //? @note: grabs current argument
         string arg = argv[i];
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @note: Bitchain Version -- done
-        //* @def: prints current program version
+        //* @def: Bitchain || version
         if (arg == "-v" || arg == "--version")
         {
             cout << _version << endl;
@@ -70,18 +80,16 @@ int driver(int argc, char **argv)
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @note: Bitchain Usage -- done
-        //* @def: prints how to navigate program
-        else if (arg == "-h" || arg == "--help")
+        //* @note: Bitchain || usage
+        if (arg == "-h" || arg == "--help")
         {
             usage();
             break;
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @note: Bitchain Reset -- done
-        //* @def: resets all bitchain save files
-        if (arg == "-R" || arg == "--reset")
+        //* @note: Bitchain || reset
+        if (arg == "--reset")
         {
             //? @note: attempt to reset bitchain
             if (Restart())
@@ -95,11 +103,10 @@ int driver(int argc, char **argv)
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @note: Bitchain Cache Cleaning -- done
-        //* @def: clears any contents in cache
-        if (arg == "-C" || arg == "--clean")
+        //* @note: Bitchain || clean cache
+        if (arg == "--clean")
         {
-            //? @note: attempt to clear cache
+            //& @note: attempt to clear cache
             if (ResetCache()) //* @note: cache cleared
                 cout << "Cache Cleaned" << endl;
             else //! @note: cache cleaning failed
@@ -112,9 +119,16 @@ int driver(int argc, char **argv)
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @note: Create Bitchain Account -- done
-        //* @def: prompts for username & passkey, then initializes/saves account
-        else if (arg == "-c" || arg == "--create")
+        //* @def: Bitchain || list
+        if (arg == "--list")
+        {
+            //& @note: run global 'list account' function here
+            break;
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        //* @def: Bitchain || create
+        if (arg == "--create")
         {
             //? @note: grab user data
             string username, passkey;
@@ -164,8 +178,8 @@ int driver(int argc, char **argv)
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @def:
-        if (arg == "-l" || arg == "--load")
+        //* @def: Bitchain || load
+        if (arg == "--load")
         {
             //? @note: target was passed as argument
             string target;
@@ -202,17 +216,17 @@ int driver(int argc, char **argv)
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @def: Delete Bitchain Account
-        else if (arg == "-d" || arg == "--delete")
+        //* @def: Bitchain || delete
+        if (arg == "--delete")
         {
-            //? @note: grab target argument
+            //& @note: grab target argument
             string target;
             if (i + 1 < argc && argv[i + 1] != nullptr)
             {
-                //? @note: pass argv into target, then delete if target is found
+                //& @note: pass argv into target, then delete if target is found
                 target = argv[i + 1];
 
-                //? @note: attempt deletion
+                //& @note: attempt deletion
                 if (account.wipe(target)) //* @note: deletion success
                     cout << "Bitchain Account Deleted" << endl;
                 else //! @note: deletion failed
@@ -231,6 +245,13 @@ int driver(int argc, char **argv)
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
+        //* @def: Bitchain || display
+        if (arg == "--display")
+        {
+            //& @note:
+        }
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
+        ///////////////////////////////////////////////////////////////////////////////////////////////////
         // TODO @def: Add Key to Cached Account
         if (arg == "-a" || arg == "--add")
         {
@@ -240,20 +261,11 @@ int driver(int argc, char **argv)
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         // TODO @def: Removes [target] Key from Cached Account
-        else if (arg == "-r" || arg == "--remove")
+        if (arg == "-r" || arg == "--remove")
         {
             //** code */
             break;
         }
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // TODO @def: Prints [target] Key from Cached Account
-        else if (arg == "-p" || arg == "--print")
-        {
-            //** code */
-            break;
-        }
-        ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
     }
 
