@@ -1,3 +1,1 @@
-github,russianbot,axix01@yahoo.com,password
-google,blublu,lubdub,password
 yahoo,username,axix01@yahoo.com,password

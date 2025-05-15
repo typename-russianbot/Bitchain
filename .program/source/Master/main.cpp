@@ -209,7 +209,7 @@ int driver(int argc, char **argv)
             //! @note: account loading failed
             else
             {
-                cerr << "<error>=accountLoading_failed" << endl;
+                //? display all accounts
                 flag = 1;
             }
 
@@ -286,10 +286,12 @@ int driver(int argc, char **argv)
             if (account.loadFromCache())
             {
                 cout << endl;
-                account.add();
 
+                account.add();
                 account.save();
                 account.saveToCache();
+
+                cout << _clear;
                 cout << account << endl;
             }
 
@@ -303,7 +305,7 @@ int driver(int argc, char **argv)
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        // todo @def: Bitchain || remove
+        //* Bitchain || remove
         if (arg == "-r" || arg == "--remove")
         {
             //! @note: cache is empty
@@ -317,9 +319,12 @@ int driver(int argc, char **argv)
             string target;
             if (i + 1 < argc && argv[i + 1] != nullptr && account.loadFromCache())
             {
+                target = argv[i + 1];
+                account.remove(target);
+                account.save();
             }
 
-            //! @note: remove key failed
+            //! @note: remove key failure
             else
             {
                 cerr << "<error>=removeKey_failed" << endl;
@@ -339,7 +344,7 @@ int driver(int argc, char **argv)
                 flag = 1;
             }
 
-            //& @note: attempt to display key
+            //& @note: show key
             string target;
             if (i + 1 < argc && argv[i + 1] != nullptr && account.loadFromCache())
             {

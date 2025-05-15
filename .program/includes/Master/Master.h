@@ -11,6 +11,7 @@ using namespace std;
 
 //? @def: Macros
 #define _version "Bitchain -- v2.1.11" //& @var: _version
+#define _clear "\033[2J"         //& @var: _clear
 
 //? @def: Functions
 ////////////////////////////////////////////////////////////////////////////////////
