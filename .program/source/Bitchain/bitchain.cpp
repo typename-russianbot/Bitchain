@@ -2,7 +2,7 @@
 
 //? @defgroup: Helpers
 ////////////////////////////////////////////////////////////////////////////////////////////
-//^ @protected: addKey(const Key&) -- done
+//^ @protected: addKey(const Key&)
 bool Bitchain::addKey(const Key &key)
 {
     Node *newNode = new Node(key);
@@ -44,7 +44,7 @@ bool Bitchain::addKey(const Key &key)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
-//^ @protected: removeKey(const string) -- done
+//^ @protected: removeKey(const string)
 bool Bitchain::rmKey(const string target)
 {
     //* @note: only one key is stored & is target
@@ -91,7 +91,7 @@ bool Bitchain::rmKey(const string target)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
-//^ @protected: searchKey(const string) -- done
+//^ @protected: searchKey(const string)
 bool Bitchain::searchKey(const string target)
 {
     Node *copy = head;
@@ -114,14 +114,46 @@ bool Bitchain::searchKey(const string target)
     return false;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+//^ @protected: showKey(const string)
+bool Bitchain::showKey(const string target)
+{
+    Node *copy = head;
+
+    if (copy == nullptr)
+        return false;
+    if (!searchKey(target))
+        return false;
+    if (copy->getKey().getKeyname() == target)
+    {
+        cout << copy->getKey() << endl;
+        return true;
+    }
+
+    copy = copy->getNext();
+    while (copy != head)
+    {
+        if (copy->getKey().getKeyname() == target)
+        {
+            cout << copy->getKey() << endl;
+            return true;
+        }
+    }
+
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////////////////
 
 //? @defgroup: Resources
 ////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: Bitchain(void) -- done
+//* @public: Bitchain(void)
 Bitchain::Bitchain(void) : head(nullptr), tail(nullptr) { return; }
+
+//? @public: Bitchain(const Bitchain&)
+Bitchain::Bitchain(const Bitchain &bitchain) : head(bitchain.head), tail(bitchain.tail) { return; }
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: ~Bitchain(void) -- done
+//* @public: ~Bitchain(void)
 Bitchain::~Bitchain(void)
 {
     if (head == tail && tail == nullptr)
@@ -140,9 +172,9 @@ Bitchain::~Bitchain(void)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 
-// TODO - @defgroup: Functions
+//? @defgroup: Functions
 ////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: add(const Key&) -- done
+//* @public: add(const Key&)
 bool Bitchain::add(const Key &key)
 {
     if (addKey(key))
@@ -152,7 +184,7 @@ bool Bitchain::add(const Key &key)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: remove(const string) -- done
+//* @public: remove(const string)
 bool Bitchain::remove(const string target)
 {
     if (rmKey(target))
@@ -162,7 +194,7 @@ bool Bitchain::remove(const string target)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: search(const string) -- done
+//* @public: search(const string)
 bool Bitchain::search(const string target)
 {
     if (searchKey(target))
@@ -172,7 +204,17 @@ bool Bitchain::search(const string target)
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: isEmpty(void) -- done
+//* @public: show(const string)
+bool Bitchain::show(const string target)
+{
+    if (showKey(target))
+        return true;
+
+    return false;
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+//* @public: isEmpty(void)
 bool Bitchain::isEmpty(void)
 {
     if (head == tail && tail == nullptr)
@@ -230,10 +272,8 @@ bool Bitchain::load(ifstream &readfile)
         if (getline(currentline, nKeyname, ',') && getline(currentline, nUsername, ',') && getline(currentline, nEmail, ',') && getline(currentline, nPassword))
         {
             Key key(nKeyname, {nUsername, nPassword, nEmail});
-            if (addKey(key))
-                cout << "Key added" << endl;
-            else
-                cout << "Key failed to add" << endl;
+            if (!addKey(key))
+                cerr << "<error>=adding_key" << endl;
         }
     }
 
@@ -244,7 +284,7 @@ bool Bitchain::load(ifstream &readfile)
 
 //? @defgroup: Overloads
 ////////////////////////////////////////////////////////////////////////////////////////////
-//* @public: operator<<(ostream&, const Bitchain&) -- done
+//* @public: operator<<(ostream&, const Bitchain&)
 ostream &operator<<(ostream &out, const Bitchain &bitchain)
 {
     Node *copy = bitchain.head;
@@ -268,5 +308,15 @@ ostream &operator<<(ostream &out, const Bitchain &bitchain)
     }
 
     return out;
+}
+////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////
+//* @public: operator=(const Bitchain&)
+Bitchain &Bitchain::operator=(const Bitchain &other)
+{
+    this->head = other.head;
+    this->tail = other.tail;
+
+    return *this;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////

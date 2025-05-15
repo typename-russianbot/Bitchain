@@ -1,7 +1,8 @@
 {
   "files.associations": {
     "ostream": "cpp",
-    "fstream": "cpp"
+    "fstream": "cpp",
+    "iostream": "cpp"
   },
   "C_Cpp_Runner.cCompilerPath": "gcc",
   "C_Cpp_Runner.cppCompilerPath": "g++",

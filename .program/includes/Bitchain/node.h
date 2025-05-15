@@ -11,12 +11,12 @@ private:
     Node *prev; //* @var: prev
 
 public:
-    // TODO - @defgroup: Resources
+    //? @defgroup: Resources
     //////////////////////////////////////////////////////
     //* @public: Node(const Key)
-    //* @def: constructor
 
-    Node(const Key &);
+    Node(const Key &);  //* @def: default constructor
+    Node(const Node &); //* @def: copy constructor
     //////////////////////////////////////////////////////
     //////////////////////////////////////////////////////
     //* @public: ~Node(void)
@@ -25,7 +25,7 @@ public:
     ~Node(void);
     //////////////////////////////////////////////////////
 
-    // TODO - @defgroup: Mutators
+    //? @defgroup: Mutators
     //////////////////////////////////////////////////////
     //* @public: setKey(const Key)
     //* @def: sets node key
@@ -45,7 +45,7 @@ public:
     void setPrev(Node *);
     //////////////////////////////////////////////////////
 
-    // TODO - @defgroup: Accessors
+    //? @defgroup: Accessors
     //////////////////////////////////////////////////////
     //* @public: getKey(void)
     //* @def: returns key of this node
@@ -63,5 +63,13 @@ public:
     //* @def: returns prev node from this node
 
     Node *getPrev(void);
+    //////////////////////////////////////////////////////
+
+    //? @defgroup: Overloads
+    //////////////////////////////////////////////////////
+    //* @public: operator<<
+    //* @def:
+
+    Node &operator=(const Node &);
     //////////////////////////////////////////////////////
 };

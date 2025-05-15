@@ -9,12 +9,11 @@
 //^ @fn: testbench(void)
 int testbench(void)
 {
-    Account account("mjh2001", "changeme");
-
-    account.load();
-    account.print();
-    account.add();
-    account.save();
+    //? @note: debug list
+    //! 1. dont save a profile with the same username again to avoid duplicates
+    //! 2. reconfigure copy constructor memory handling in Bitchain, shallow copy is breaking program
+    //! 3. create showKey function in bitchain to display an individual key
+    //! TBD...
 
     return 0;
 }
@@ -43,7 +42,7 @@ void usage(void)
          << "\t\t--delete\t\t\tDelete Bitchain Account" << endl
          << "\t\t--display\t\t\tDisplay Bitchain Accounts" << endl
          << endl
-         << "\tBitchain Keys:" << endl
+         << "\t| -Bitchain Keys- |" << endl
          << "\t\t--add\t\t\t\tAdds a key" << endl
          << "\t\t--remove\t\t\tDeletes a key" << endl
          << "\t\t--show\t\t\t\tShows a key" << endl
@@ -75,6 +74,7 @@ int driver(int argc, char **argv)
         //* @def: Bitchain || version
         if (arg == "-v" || arg == "--version")
         {
+            //& @note: bitchain version
             cout << _version << endl;
             break;
         }
@@ -83,6 +83,7 @@ int driver(int argc, char **argv)
         //* @note: Bitchain || usage
         if (arg == "-h" || arg == "--help")
         {
+            //& @note: bitchain usage
             usage();
             break;
         }
@@ -91,12 +92,14 @@ int driver(int argc, char **argv)
         //* @note: Bitchain || reset
         if (arg == "--reset")
         {
-            //? @note: attempt to reset bitchain
+            //& note: reset bitchain
             if (Restart())
                 cout << "User Reset Bitchain" << endl;
+
+            //! @note: bitchain reset failed
             else
             {
-                cerr << "<error>=reset_failure" << endl;
+                cerr << "<error>=reset_failed" << endl;
                 flag = 1;
             }
             break;
@@ -106,12 +109,14 @@ int driver(int argc, char **argv)
         //* @note: Bitchain || clean cache
         if (arg == "--clean")
         {
-            //& @note: attempt to clean cache
-            if (ResetCache()) //* @note: cache cleared
+            //& @note: clean cache
+            if (ResetCache())
                 cout << "User Cleaned Cache" << endl;
-            else //! @note: cache cleaning failed
+
+            //! @note: cache cleaning failed
+            else
             {
-                cerr << "<error>=cache_cleaning_failure" << endl;
+                cerr << "<error>=cacheCleaning_failed" << endl;
                 flag = 1;
             }
 
@@ -160,9 +165,11 @@ int driver(int argc, char **argv)
             {
                 cout << "Bitchain Account Created" << endl;
             }
-            else //! @note: saving failure
+
+            //! @note: account saving failed
+            else
             {
-                cerr << "<error>=saving_failure" << endl;
+                cerr << "<error>=accountSave_failed" << endl;
                 flag = 1;
             }
 
@@ -173,9 +180,8 @@ int driver(int argc, char **argv)
         //* @def: Bitchain || load
         if (arg == "--load")
         {
-            //? @note: target was passed as argument
+            //& @note: target was given
             string target;
-
             if (i + 1 < argc && argv[i + 1] != nullptr)
             {
                 target = argv[i + 1];
@@ -192,15 +198,18 @@ int driver(int argc, char **argv)
                     flag = 1;
                 }
             }
-            //? @note: attempt to load
+
+            //& @note: prompt for user input
             else if (account.load()) //* @note: account loaded
             {
                 cout << "Bitchain Account Loaded" << endl;
                 account.saveToCache();
             }
-            else //! @note: file not loaded
+
+            //! @note: account loading failed
+            else
             {
-                cerr << "<error>=loading_failure" << endl;
+                cerr << "<error>=accountLoading_failed" << endl;
                 flag = 1;
             }
 
@@ -219,9 +228,11 @@ int driver(int argc, char **argv)
                 //& @note: attempt deletion
                 if (account.wipe(target)) //* @note: deletion success
                     cout << "Bitchain Account Deleted" << endl;
-                else //! @note: deletion failed
+
+                //! @note: account deletion failure
+                else
                 {
-                    cerr << "<error>=deletion_failure" << endl;
+                    cerr << "<error>=accountDelete_failed" << endl;
                     flag = 1;
                 }
             }
@@ -230,7 +241,6 @@ int driver(int argc, char **argv)
                 cerr << "<error>=no_target" << endl;
                 flag = 1;
             }
-
             break;
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -238,7 +248,26 @@ int driver(int argc, char **argv)
         //* @def: Bitchain || display
         if (arg == "--display")
         {
-            //& @note: run global 'list account' function here
+            //! @note: Cache is empty
+            if (CacheEmpty())
+            {
+                cerr << "<error>=cache_empty" << endl;
+                flag = 1;
+            }
+
+            //& @note: attempt to display account information
+            if (account.loadFromCache())
+            {
+                cout << endl;
+                cout << account << endl;
+            }
+
+            //! @note: display account failed
+            else
+            {
+                cerr << "<error>=displayAccount_failed" << endl;
+                flag = 1;
+            }
             break;
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -246,31 +275,56 @@ int driver(int argc, char **argv)
         //* @def: Bitchain || add
         if (arg == "-a" || arg == "--add")
         {
-            //& @note: attempt to add key
-            if (!CacheEmpty()) //* @note: add key
-                cout << "<implementation goes here>" << endl;
-            else //! @note: cache is empty, cancel operation
+            //! @note: Cache is empty
+            if (CacheEmpty())
             {
-                cerr << "<error>=empty_cache" << endl;
+                cerr << "<error>=cache_empty" << endl;
+                flag = 1;
+            }
+
+            //& @note: attempt to add key
+            if (account.loadFromCache())
+            {
+                cout << endl;
+                account.add();
+
+                account.save();
+                account.saveToCache();
+                cout << account << endl;
+            }
+
+            //! @note: add key failed
+            else
+            {
+                cerr << "<error>=addKey_failed" << endl;
                 flag = 1;
             }
             break;
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////////////////////////////////////////////////
-        //* @def: Bitchain || remove
+        // todo @def: Bitchain || remove
         if (arg == "-r" || arg == "--remove")
         {
-            //** code */
-            //& @note: attempt to delete key
-            if (!CacheEmpty()) //* @note: delete key
-                cout << "<implementation goes here>" << endl;
-            else //! @note: cache is empty, cancel operation
+            //! @note: cache is empty
+            if (CacheEmpty())
             {
-                cerr << "<error>=empty_cache" << endl;
+                cerr << "<error>=cache_empty" << endl;
                 flag = 1;
             }
 
+            //& @note: remove key
+            string target;
+            if (i + 1 < argc && argv[i + 1] != nullptr && account.loadFromCache())
+            {
+            }
+
+            //! @note: remove key failed
+            else
+            {
+                cerr << "<error>=removeKey_failed" << endl;
+                flag = 1;
+            }
             break;
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,24 +332,32 @@ int driver(int argc, char **argv)
         //* @def: Bitchain || show
         if (arg == "--show")
         {
-            //& @note: attempt to show key
-            if (CacheEmpty()) //! @note: cache is empty!
+            //! @note: cache is empty
+            if (CacheEmpty())
             {
-                cerr << "<error>=empty_cache" << endl;
-                flag = 1;
-            }
-            else if (account.loadFromCache())
-            {
-                cout << endl;
-                account.print();
-                cout << endl;
-            }
-            else
-            {
-                cerr << "<error>=operation_failure" << endl;
+                cerr << "<error>=cache_empty" << endl;
                 flag = 1;
             }
 
+            //& @note: attempt to display key
+            string target;
+            if (i + 1 < argc && argv[i + 1] != nullptr && account.loadFromCache())
+            {
+                target = argv[i + 1];
+                cout << endl;
+
+                if (target == "all")
+                    account.print();
+                else
+                    account.print(target);
+            }
+
+            //! @note: show key failed
+            else
+            {
+                cerr << "<error>=showKey_failed" << endl;
+                flag = 1;
+            }
             break;
         }
         ///////////////////////////////////////////////////////////////////////////////////////////////////

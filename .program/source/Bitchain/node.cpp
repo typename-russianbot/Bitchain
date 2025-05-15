@@ -4,6 +4,9 @@
 //////////////////////////////////////////////////////
 //* @public: Node(const Key&)
 Node::Node(const Key &nKey) : key(nKey), next(nullptr), prev(nullptr) { return; }
+
+//* @public: Node(const Node&)
+Node::Node(const Node &node) : key(node.key), next(node.next), prev(node.prev) { return; }
 //////////////////////////////////////////////////////
 //////////////////////////////////////////////////////
 //* @public: ~Node(void)
@@ -48,4 +51,17 @@ Node *Node::getNext(void) { return next; }
 //////////////////////////////////////////////////////
 //* @public: getPrev(void)
 Node *Node::getPrev(void) { return prev; }
+//////////////////////////////////////////////////////
+
+//? @defgroup: Overloads
+//////////////////////////////////////////////////////
+//* @public: operator=(const Node&)
+Node &Node::operator=(const Node &other)
+{
+    this->key = other.key;
+    this->next = other.next;
+    this->prev = other.prev;
+    
+    return *this;
+}
 //////////////////////////////////////////////////////
